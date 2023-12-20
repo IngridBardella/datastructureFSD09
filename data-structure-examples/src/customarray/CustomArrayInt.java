@@ -1,6 +1,6 @@
 package customarray;
 
-public class CustomArrayInt {
+public class CustomArrayInt{
     //it has only one element
     private int[] data = new int[1];
     private int size = 0;
@@ -13,6 +13,10 @@ public class CustomArrayInt {
         size++;
     }
 
+    public int size(){
+        return size;
+    }
+
     //DELETE BY INDEX
 
     /**
@@ -20,7 +24,17 @@ public class CustomArrayInt {
      * @param index
      */
     public void deleteByIndex(int index){
+        if(index < 0 || index >= size){
+            throw new IndexOutOfBoundsException();
+        }
 
+        //shifting to the left and overriding the value in index
+        for(int i=index ; i< size - 1; i++){
+            data[i] = data[i+1];
+        }
+
+        //we removed one item !
+        size--;
     }
 
 
@@ -31,6 +45,13 @@ public class CustomArrayInt {
      * @return false when there is no value exists in the array
      */
     public boolean deleteByValue(int value){
+        //finding the index
+        for(int i=0; i< size ; i++){
+            if (data[i]== value){
+                deleteByIndex(i);
+                return true;
+            }
+        }
         return false;
     }
 
@@ -41,12 +62,21 @@ public class CustomArrayInt {
      * @param index
      */
     public void insertAtIndex(int value, int index){
-
+        ensureSpaceForNewElement();
+        if(index < 0 || index >= size){
+            throw new IndexOutOfBoundsException();
+        }
+        //shifting to the right and opening a space
+        for(int i=size - 1; i >= index ; i--){
+            data[i+1] = data[i];
+        }
+        data[index] =  value;
+        size ++;
     }
 
     // it clears the array
     public void clear(){
-
+        size=0;
     }
 
     /**
@@ -55,15 +85,45 @@ public class CustomArrayInt {
      * @return
      */
     public int get(int index){
+        if(index < 0 || index >= size){
+            throw new IndexOutOfBoundsException();
+        }
 
+        return data[index];
     }
 
+    /**
+     * Throws exception if the input data is not valid
+     * @param startIndex
+     * @param length
+     * @return
+     */
     public int[] getSlice(int startIndex, int length){
+        if(startIndex < 0 || startIndex >= size || length < 0 || startIndex + length > size ){
+            throw new IndexOutOfBoundsException();
+        }
+        int[] result = new int[length];
+
+        for(int i=startIndex; i< startIndex +length ; i++ ){
+            result[i-startIndex] = data[i];
+        }
+
+        return result;
 
     }
 
+    @Override
     public String toString(){
+        //StringBuilder, StringBuffer
+        StringBuilder sb = new StringBuilder();
+        sb.append("[");
+        for(int i=0; i< size; i++){
+            sb.append(i==0 ? "": ",");
+            sb.append(data[i]);
+        }
+        sb.append("]");
 
+        return sb.toString();
     }
 
     //checks the size
